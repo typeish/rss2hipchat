@@ -1,0 +1,7 @@
+cron:
+- description: trigger fetching
+  url: /tasks/fetch
+  schedule: every 5 minutes
+- description: trigger dispatching
+  url: /tasks/dispatch
+  schedule: every 5 minutes

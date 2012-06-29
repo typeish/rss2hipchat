@@ -1,0 +1,64 @@
+<html>
+<head>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+        }
+        td {
+            padding: 1em;
+        }
+        .summary {
+            display: none;
+        }
+        .title td {
+            border-top: 1px solid #ccc;
+        }
+        .summary td {
+            padding-bottom: 2em;
+        }
+        .summary.open {
+            display: table-row;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST">
+        <input name="name"  placeholder="name"          required>
+        <input name="url"   placeholder="feed url"      required>
+        <input name="room"  placeholder="target room"   required>
+        <input name="token" placeholder="HC auth token" required>
+        <button>Add Feed</button>
+    </form>
+    <h1>Feeds ({{ feeds.count }})</h1>
+    {% for feed in feeds %}
+        <h2>{{ feed.name }} (<a href="{{ feed.url }}">rss &raquo;</a>)</h2>
+        <table class="messages">
+            {% for message in feed.getMessages %}
+                <tr class="title">
+                    <td title="{{ message.date }}">{{ message.date|timesince }} ago</td>
+                    <td title="{{ message.dispatched }}">{% if message.dispatched %}{{ message.dispatched|timesince }} ago{% else %}—{% endif %}</td>
+                    <td>{{ message.title }}</td>
+                </tr>
+                <tr class="summary">
+                    <td colspan="3">{{ message.summary }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+
+    <script>
+        $('tr.title').each(function(){
+            var $message = $(this);
+            var $message_summary = $message.next();
+            $message.on('click', function(){
+                $message_summary.toggleClass('open');
+            });
+            $message_summary.on('click', function(){
+                $message_summary.removeClass('open');
+            });
+        });
+    </script>
+
+</body>
+</html>
